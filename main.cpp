@@ -179,9 +179,7 @@ void unit_matrix_reverse(QVector<QVector<fract>>& matrix){
     fract f_num, diag_num;
     for(int yi = n_row-1-1, xi = r_col-1; yi >= 0; yi--, xi--){
         diag_num = matrix[yi][xi];
-        qDebug("1");
         if(diag_num.u_num != 1){
-            qDebug("2");
             if(check_line_reverse(matrix[yi])){
                 if(xi > 0 && yi < 0){
                     xi--;
@@ -204,7 +202,6 @@ void unit_matrix_reverse(QVector<QVector<fract>>& matrix){
                 }
             }
         }
-        qDebug("3");
         int count=1;
         for(int i = yi + 1; i < n_row; i++){
             f_num = matrix[i][xi];
@@ -215,7 +212,6 @@ void unit_matrix_reverse(QVector<QVector<fract>>& matrix){
             }
             count++;
         }
-        qDebug("4");
 
     }
 }
@@ -231,6 +227,8 @@ int main(int argc, char *argv[])
     mirror(matrix);
     cout_matrix(matrix);
     unit_matrix_reverse(matrix);
+    cout_matrix(matrix);
+    mirror(matrix);
     cout_matrix(matrix);
     cout<<"end"<<endl;
     return a.exec();
