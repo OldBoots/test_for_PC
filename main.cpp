@@ -131,10 +131,9 @@ void unit_matrix_forward(QVector<QVector<fract>>& matrix, int& f_col){
     int n_row = matrix.size();
     int n_col = matrix[0].size();
     fract f_num, diag_num;
-    // forward
-    for(int yi = 0, xi = 0; yi < n_row; yi++, xi++){
+    cout<<"FORWARD"<<endl<<endl;
+    for(int yi = 0, xi = 0, iter = 1; yi < n_row; yi++, xi++, iter++){
         sort_row(matrix, yi, xi);
-        cout_matrix(matrix);
         diag_num = matrix[yi][xi];
         if(diag_num.u_num == 0){
             if(check_line_forward(matrix[yi])){
@@ -146,15 +145,18 @@ void unit_matrix_forward(QVector<QVector<fract>>& matrix, int& f_col){
                 }
                 diag_num = matrix[yi][xi];
                 while(check_line_forward(matrix[yi])){
-                    xi++;
-                    yi++;
+                    if(xi < n_col - 1 && yi < n_row - 1){
+                        xi++;
+                        yi++;
+                    } else {
+                        return;
+                    }
                     diag_num = matrix[yi][xi];
                 }
             } else {
                 while(diag_num.u_num == 0){
                     xi++;
                     sort_row(matrix, yi, xi);
-                    cout_matrix(matrix);
                     diag_num = matrix[yi][xi];
                 }
             }
@@ -168,55 +170,61 @@ void unit_matrix_forward(QVector<QVector<fract>>& matrix, int& f_col){
                 matrix[i][j] = obj.sum(matrix[i][j], obj.mult(matrix[yi][j],f_num), 1);
             }
         }
+        cout<<"IT: "<<iter<<endl;
+        cout_matrix(matrix);
+
         f_col = xi;
     }
 }
-
-void unit_matrix_reverse(QVector<QVector<fract>>& matrix, int f_col){
+void unit_matrix_reverse(QVector<QVector<fract>>& matrix){
     Fraction obj;
     int n_row = matrix.size();
     int n_col = matrix[0].size();
-    int r_col = n_col - f_col - 1;
+    int r_col = n_col - 1;
     fract f_num, diag_num;
-    for(int yi = 0, xi = r_col; yi < n_row; yi++, xi++){
+    cout<<"REVERSE"<<endl<<endl;
+    for(int yi = n_row-1-1, iter = 1, xi = r_col-1; yi >= 0; yi--, xi--, iter++){
         diag_num = matrix[yi][xi];
-        qDebug("1");
         if(diag_num.u_num != 1){
-            qDebug("2");
             if(check_line_reverse(matrix[yi])){
-                if(xi < n_col - 1 && yi < n_row - 1){
-                    xi++;
-                    yi++;
+                if(xi > 0 && yi > 0){
+                    xi--;
+                    yi--;
                 } else {
                     return;
                 }
                 diag_num = matrix[yi][xi];
                 while(check_line_reverse(matrix[yi])){
-                    xi++;
-                    yi++;
+                    if(xi > 0 && yi > 0){
+                        xi--;
+                        yi--;
+                    } else {
+                        return;
+                    }
                     diag_num = matrix[yi][xi];
                 }
             } else {
-                xi++;
+                xi--;
                 diag_num = matrix[yi][xi];
                 while(diag_num.u_num != 1){
-                    xi++;
+                    xi--;
                     diag_num = matrix[yi][xi];
                 }
             }
         }
-        qDebug("3");
+        int count=1;
         for(int i = yi + 1; i < n_row; i++){
             f_num = matrix[i][xi];
             for(int j = xi; j >= 0; j--){
-                matrix[i][j] = obj.sum(matrix[i][j], obj.mult(matrix[i - 1][j], f_num), 1);
+                matrix[i][j] = obj.sum(matrix[i][j], obj.mult(matrix[i - count][j], f_num), 1);
             }
+            count++;
         }
-        qDebug("4");
+        cout<<"IT: "<<iter<<endl;
         cout_matrix(matrix);
+
     }
 }
-
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
@@ -228,7 +236,10 @@ int main(int argc, char *argv[])
     cout_matrix(matrix);
     mirror(matrix);
     cout_matrix(matrix);
-    unit_matrix_reverse(matrix, f_col);
+    unit_matrix_reverse(matrix);
+    cout<<"ANSWER"<<endl;
+    mirror(matrix);
     cout_matrix(matrix);
+    cout<<"end"<<endl;
     return a.exec();
 }
