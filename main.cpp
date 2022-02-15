@@ -131,10 +131,9 @@ void unit_matrix_forward(QVector<QVector<fract>>& matrix, int& f_col){
     int n_row = matrix.size();
     int n_col = matrix[0].size();
     fract f_num, diag_num;
-    // forward
-    for(int yi = 0, xi = 0; yi < n_row; yi++, xi++){
+    cout<<"FORWARD"<<endl<<endl;
+    for(int yi = 0, xi = 0, iter = 1; yi < n_row; yi++, xi++, iter++){
         sort_row(matrix, yi, xi);
-        cout_matrix(matrix);
         diag_num = matrix[yi][xi];
         if(diag_num.u_num == 0){
             if(check_line_forward(matrix[yi])){
@@ -158,7 +157,6 @@ void unit_matrix_forward(QVector<QVector<fract>>& matrix, int& f_col){
                 while(diag_num.u_num == 0){
                     xi++;
                     sort_row(matrix, yi, xi);
-                    cout_matrix(matrix);
                     diag_num = matrix[yi][xi];
                 }
             }
@@ -172,6 +170,9 @@ void unit_matrix_forward(QVector<QVector<fract>>& matrix, int& f_col){
                 matrix[i][j] = obj.sum(matrix[i][j], obj.mult(matrix[yi][j],f_num), 1);
             }
         }
+        cout<<"IT: "<<iter<<endl;
+        cout_matrix(matrix);
+
         f_col = xi;
     }
 }
@@ -181,7 +182,8 @@ void unit_matrix_reverse(QVector<QVector<fract>>& matrix){
     int n_col = matrix[0].size();
     int r_col = n_col - 1;
     fract f_num, diag_num;
-    for(int yi = n_row-1-1, xi = r_col-1; yi >= 0; yi--, xi--){
+    cout<<"REVERSE"<<endl<<endl;
+    for(int yi = n_row-1-1, iter = 1, xi = r_col-1; yi >= 0; yi--, xi--, iter++){
         diag_num = matrix[yi][xi];
         if(diag_num.u_num != 1){
             if(check_line_reverse(matrix[yi])){
@@ -213,13 +215,13 @@ void unit_matrix_reverse(QVector<QVector<fract>>& matrix){
         int count=1;
         for(int i = yi + 1; i < n_row; i++){
             f_num = matrix[i][xi];
-            cout<<"f_num"<<f_num.u_num<<" "<<i<<" "<<xi<<endl;
-            cout_matrix(matrix);
             for(int j = xi; j >= 0; j--){
                 matrix[i][j] = obj.sum(matrix[i][j], obj.mult(matrix[i - count][j], f_num), 1);
             }
             count++;
         }
+        cout<<"IT: "<<iter<<endl;
+        cout_matrix(matrix);
 
     }
 }
@@ -235,7 +237,7 @@ int main(int argc, char *argv[])
     mirror(matrix);
     cout_matrix(matrix);
     unit_matrix_reverse(matrix);
-    cout_matrix(matrix);
+    cout<<"ANSWER"<<endl;
     mirror(matrix);
     cout_matrix(matrix);
     cout<<"end"<<endl;
