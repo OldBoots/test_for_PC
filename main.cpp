@@ -146,8 +146,12 @@ void unit_matrix_forward(QVector<QVector<fract>>& matrix, int& f_col){
                 }
                 diag_num = matrix[yi][xi];
                 while(check_line_forward(matrix[yi])){
-                    xi++;
-                    yi++;
+                    if(xi < n_col - 1 && yi < n_row - 1){
+                        xi++;
+                        yi++;
+                    } else {
+                        return;
+                    }
                     diag_num = matrix[yi][xi];
                 }
             } else {
@@ -181,7 +185,7 @@ void unit_matrix_reverse(QVector<QVector<fract>>& matrix){
         diag_num = matrix[yi][xi];
         if(diag_num.u_num != 1){
             if(check_line_reverse(matrix[yi])){
-                if(xi > 0 && yi < 0){
+                if(xi > 0 && yi > 0){
                     xi--;
                     yi--;
                 } else {
@@ -189,8 +193,12 @@ void unit_matrix_reverse(QVector<QVector<fract>>& matrix){
                 }
                 diag_num = matrix[yi][xi];
                 while(check_line_reverse(matrix[yi])){
-                    xi--;
-                    yi--;
+                    if(xi > 0 && yi > 0){
+                        xi--;
+                        yi--;
+                    } else {
+                        return;
+                    }
                     diag_num = matrix[yi][xi];
                 }
             } else {
